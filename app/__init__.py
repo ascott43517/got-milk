@@ -26,14 +26,19 @@ def create_app():
     from .routes import hello_bp
     from .routes import users_bp
     from .routes import posts_bp
+    from .routes import maps_bp
 
     app.register_blueprint(users_bp)
     app.register_blueprint(posts_bp)
     app.register_blueprint(hello_bp)
+    app.register_blueprint(maps_bp)
 
     # Register Blueprints here
     # from .routes import example_bp
     # app.register_blueprint(example_bp)
+
+    from app.models.users import Users
+    from app.models.posts import Posts
 
    
 

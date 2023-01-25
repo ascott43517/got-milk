@@ -2,10 +2,17 @@ from flask import Blueprint, request, jsonify, make_response
 from app import db
 from app.models.posts import Posts
 from app.models.users import Users
+import requests
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
+maps_bp = Blueprint("maps", __name__,url_prefix="/")
 hello_bp = Blueprint("homepage", __name__,url_prefix="/")
 posts_bp = Blueprint("posts", __name__, url_prefix="/posts")
 users_bp = Blueprint("users", __name__, url_prefix="/users")
+
+maps_api = os.environ.get("MAPS_API")
 
 @hello_bp.route("", methods=["GET"])
 def readme_page():
@@ -156,3 +163,23 @@ def update_post(post_id):
             
         })
 
+
+# MAPS CALL
+@maps_bp.route("/maps", methods=["GET"])
+def get_map_directions():
+    request_body = request.get_json()
+    request_body = {
+        "origin":"Tacoma,Wa",
+        "destination":"Tampa,FL"
+    }
+    
+    print(request_body)
+    # if not origin_query or not destination_query:
+    #     return {"message": "must provide origin and destination parameters"}
+  
+
+    response = requests.get(
+        "https://maps.googleapis.com/maps/api/directions/json?",
+        params={"origin": request_body["origin"], "destination": request_body["destination"], "key": maps_api })
+    
+    return jsonify(response.json())
