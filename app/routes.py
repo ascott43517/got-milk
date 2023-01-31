@@ -36,23 +36,62 @@ def create_user():
             
         })
 
-# UPDATE User INFO
-@users_bp.route("/<user_id>", methods=["PATCH"])
-def update_user(user_id):
-    user = Users.query.get(user_id)
-    request_body = request.get_json()
-
-    user.address = request_body["address"]
-    user.username = request_body["username"]
+# GET A USER BY USERNAME- email
+@users_bp.route("/<username>", methods=["GET"])
+def get_user(username):
     
-    db.session.commit()
+    all_users = Users.query.all()
+    for user in all_users:
+      if user.username == str(username):
+        return ({
+                "user_id": user.user_id,
+                "address": user.address,
+                "username":user.username,
+                
+} ) 
+    # return ('hi')
+        
+ 
+    
 
-    return ({
-            "user_id":user.user_id,
-            "address":user.address,
-            "username": user.username,
-            
+# GET LIST OF ALL USers
+@users_bp.route("", methods=["GET"])
+def get_all_users():
+    # retrieve all users from database
+    all_users = Users.query.all()
+    user_list = []
+    for user in all_users:
+        user_list.append({
+            "user_id" : user.user_id,
+            "address": user.address,
+            "username": user.username
         })
+    return jsonify(user_list)
+
+# UPDATE User INFO
+@users_bp.route("/<username>", methods=["PATCH"])
+def update_user(username):
+    request_body = request.get_json()
+    all_users = Users.query.all()
+    print(request_body["user_id"]["user_id"])
+    for user in all_users:
+     
+    
+      
+      if user.username == username:
+        print('here')
+        user.address = request_body["address"]
+        user.username = request_body["username"]
+        # user.user_id = request
+    
+        db.session.commit()
+        
+      return ({  
+       "address":request_body["address"],
+        "username": request_body["username"],
+        "user_id": request_body["user_id"]["user_id"]
+            
+   })
 
 # CREATE A NEW POST
 @posts_bp.route("", methods=["POST"])
@@ -162,7 +201,51 @@ def update_post(post_id):
 
             
         })
+# GET LIST OF ALL POSTS
+@posts_bp.route("", methods=["GET"])
+def get_all_posts():
+    # retrieve all posts from database
+    all_posts = Posts.query.all()
+    post_list = []
+    for post in all_posts:
+        post_list.append({
+            "user_id" : post.user_id,
+            "address": post.address,
+            "username": post.username,
+            "quantity": post.quantity,
+            "formula_name": post.formula_name,
+            "post_id": post.post_id,
+        })
+    return jsonify(post_list)
 
+
+
+# GET ALL USERS AND THEIR POSTS
+@users_bp.route("/<user_id>/posts",methods=["GET"])
+def get_users(user_id):
+    #retrieve specific board from database
+    user = Users.query.get(user_id)
+    # create dictionary for return content
+    user_dict = {}
+    # create list for card content
+    post_list = []
+    # build card list
+    for post in user.posts:
+        post_dict = {
+            "user_id" : post.user_id,
+            "post_id": post.post_id,
+            "address": post.address,
+            "username": post.username,
+            "quantity": post.quantity,
+            "formula_name": post.formula_name,
+        }
+        post_list.append(post_dict)
+    user_dict["user_id"] = user.user_id
+    user_dict["address"] = user.address
+    user_dict["username"] = user.username
+    user_dict["posts"] = post_list
+
+    return user_dict
 
 # MAPS CALL
 @maps_bp.route("/maps", methods=["GET"])
