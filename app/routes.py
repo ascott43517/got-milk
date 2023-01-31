@@ -72,26 +72,19 @@ def get_all_users():
 @users_bp.route("/<username>", methods=["PATCH"])
 def update_user(username):
     request_body = request.get_json()
-    all_users = Users.query.all()
-    print(request_body["user_id"]["user_id"])
-    for user in all_users:
-     
+    all_users = Users.query.get(request_body["user_id"]["user_id"])
+
+    all_users.address = request_body["address"]
+    all_users.username = request_body["username"]
+    all_users.user_id = request_body["user_id"]["user_id"]
     
-      
-      if user.username == username:
-        print('here')
-        user.address = request_body["address"]
-        user.username = request_body["username"]
-        # user.user_id = request
-    
-        db.session.commit()
+    db.session.commit()
         
-      return ({  
-       "address":request_body["address"],
-        "username": request_body["username"],
-        "user_id": request_body["user_id"]["user_id"]
-            
-   })
+    return ({  
+       "address": all_users.address,
+       "username": all_users.username,
+       "user_id": all_users.user_id
+              })
 
 # CREATE A NEW POST
 @posts_bp.route("", methods=["POST"])
