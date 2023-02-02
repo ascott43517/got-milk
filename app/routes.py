@@ -47,6 +47,7 @@ def get_user(username):
                 "user_id": user.user_id,
                 "address": user.address,
                 "username":user.username,
+                # "posts":user.posts
                 
 } ) 
     # return ('hi')
@@ -90,6 +91,7 @@ def update_user(username):
 @posts_bp.route("", methods=["POST"])
 def create_post():
     request_body = request.get_json()
+    print(request_body)
     new_post = Posts(
             address=request_body["address"],
             username=request_body["username"],
@@ -205,10 +207,12 @@ def get_all_posts():
             "user_id" : post.user_id,
             "address": post.address,
             "username": post.username,
+            "date":post.date,
             "quantity": post.quantity,
             "formula_name": post.formula_name,
             "post_id": post.post_id,
         })
+        print(post_list)
     return jsonify(post_list)
 
 
@@ -231,13 +235,15 @@ def get_users(user_id):
             "username": post.username,
             "quantity": post.quantity,
             "formula_name": post.formula_name,
+            "date": post.date,
+            "available": post.available,
         }
         post_list.append(post_dict)
     user_dict["user_id"] = user.user_id
     user_dict["address"] = user.address
     user_dict["username"] = user.username
     user_dict["posts"] = post_list
-
+    print(user_dict["posts"])
     return user_dict
 
 # MAPS CALL
