@@ -7,7 +7,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-maps_bp = Blueprint("maps", __name__,url_prefix="/")
+maps_bp = Blueprint("maps", __name__,url_prefix="/maps")
 hello_bp = Blueprint("homepage", __name__,url_prefix="/")
 posts_bp = Blueprint("posts", __name__, url_prefix="/posts")
 users_bp = Blueprint("users", __name__, url_prefix="/users")
@@ -247,13 +247,11 @@ def get_users(user_id):
     return user_dict
 
 # MAPS CALL
-@maps_bp.route("/maps", methods=["GET"])
+@maps_bp.route("", methods=["POST"])
 def get_map_directions():
-    request_body = request.get_json()
-    request_body = {
-        "origin":"Tacoma,Wa",
-        "destination":"Tampa,FL"
-    }
+    print(request.get_json())
+    request_body = request.get_json(force=True, cache=True)
+  
     
     print(request_body)
     # if not origin_query or not destination_query:
