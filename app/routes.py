@@ -13,6 +13,7 @@ posts_bp = Blueprint("posts", __name__, url_prefix="/posts")
 users_bp = Blueprint("users", __name__, url_prefix="/users")
 
 maps_api = os.environ.get("MAPS_API")
+location_key = os.environ.get("LOCATION_KEY")
 
 @hello_bp.route("", methods=["GET"])
 def readme_page():
@@ -133,7 +134,7 @@ def mark_post_unavailable(post_id):
     post = Posts.query.get(post_id)
     
    
-    post.available =  not post.available
+    post.available =  False
     db.session.commit()
 
     return ({
@@ -211,6 +212,7 @@ def get_all_posts():
             "quantity": post.quantity,
             "formula_name": post.formula_name,
             "post_id": post.post_id,
+            "available": post.available
         })
         print(post_list)
     return jsonify(post_list)
@@ -262,4 +264,24 @@ def get_map_directions():
         "https://maps.googleapis.com/maps/api/directions/json?",
         params={"origin": request_body["origin"], "destination": request_body["destination"], "key": maps_api })
     
+    return jsonify(response.json())
+
+
+    # Location LAt Lon CALL
+@maps_bp.route("/latlng", methods=["POST"])
+def get_latlng():
+
+    request_body = request.get_json()
+    print(request_body)
+    # loc_query = request_body["q"]
+    # if not loc_query:
+    #     return {"message": "must provide q parameter (location)"}
+
+    response = requests.get(
+        "https://us1.locationiq.com/v1/search.php",
+        params={"q": request_body["q"], "key": location_key, "format": "json"}
+    )
+
+    print(response.json())
+
     return jsonify(response.json())
