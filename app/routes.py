@@ -204,7 +204,8 @@ def get_all_posts():
     all_posts = Posts.query.all()
     post_list = []
     for post in all_posts:
-        post_list.append({
+        if post.available == True:
+          post_list.append({
             "user_id" : post.user_id,
             "address": post.address,
             "username": post.username,
