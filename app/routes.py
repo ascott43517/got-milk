@@ -6,6 +6,7 @@ import requests
 import os
 from dotenv import load_dotenv
 load_dotenv()
+import datetime
 
 maps_bp = Blueprint("maps", __name__,url_prefix="/maps")
 hello_bp = Blueprint("homepage", __name__,url_prefix="/")
@@ -109,7 +110,7 @@ def create_post():
             "user_id":new_post.user_id,
             "address":new_post.address,
             "username": new_post.username,
-            "date": new_post.date,
+            "date": datetime.now(),
             "formula_name": new_post.formula_name,
             "quantity": new_post.quantity,
             "post_id": new_post.post_id,
@@ -238,7 +239,7 @@ def get_users(user_id):
             "username": post.username,
             "quantity": post.quantity,
             "formula_name": post.formula_name,
-            "date": post.date,
+            "date": datetime.now,
             "available": post.available,
         }
         post_list.append(post_dict)
