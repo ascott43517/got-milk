@@ -110,7 +110,7 @@ def create_post():
             "user_id":new_post.user_id,
             "address":new_post.address,
             "username": new_post.username,
-            "date": datetime.now(),
+            "date": new_post.date,
             "formula_name": new_post.formula_name,
             "quantity": new_post.quantity,
             "post_id": new_post.post_id,
