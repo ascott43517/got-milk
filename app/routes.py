@@ -239,7 +239,7 @@ def get_users(user_id):
             "username": post.username,
             "quantity": post.quantity,
             "formula_name": post.formula_name,
-            "date": datetime.now,
+            "date": datetime.datetime.now(),
             "available": post.available,
         }
         post_list.append(post_dict)
