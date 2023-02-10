@@ -97,7 +97,7 @@ def create_post():
     new_post = Posts(
             address=request_body["address"],
             username=request_body["username"],
-            date= datetime.date(),
+            date= datetime.datetime.now(),
             user_id= request_body["user_id"],
             formula_name= request_body["formula_name"],
             quantity= request_body["quantity"])
@@ -110,7 +110,7 @@ def create_post():
             "user_id":new_post.user_id,
             "address":new_post.address,
             "username": new_post.username,
-            "date": datetime.datetime.date(),
+            "date": new_post.date,
             "formula_name": new_post.formula_name,
             "quantity": new_post.quantity,
             "post_id": new_post.post_id,
